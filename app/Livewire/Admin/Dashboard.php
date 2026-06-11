@@ -4,12 +4,12 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 
-class Main extends Component
+class Dashboard extends Component
 {
     public function render()
     {
-        return view('livewire.admin.main')
-            ->layout('components.layouts.auth', [
+        return view('livewire.admin.dashboard')
+            ->layout('components.layouts.app', [
                 'title' => 'Admin Dashboard',
                 'showLoader' => false,
             ]);

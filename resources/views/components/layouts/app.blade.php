@@ -9,8 +9,9 @@
   {{-- <link rel="icon" type="image/png" href="{{ app(\App\Services\Setting::class)->logoUrl() }}"> --}}
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <script src='js/auth/login_animate.js'></script>
-    <script src='js/auth/login_loading_animate.js'></script>
+    <script src="{{ asset('js/auth/login_animate.js') }}"></script>
+    <script src="{{ asset('js/auth/login_loading_animate.js') }}"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     @stack('head')
 
@@ -22,7 +23,7 @@
         @endif
         {{ $slot }}
 @livewireScripts
-            <script src='js/app.js'></script>
+            <script src="{{ asset('js/app.js') }}"></script>
         <script>
             function hideLoader(){
                 const el = document.getElementById('loader-overlay');

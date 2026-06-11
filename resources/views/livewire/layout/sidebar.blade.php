@@ -25,54 +25,97 @@
 
  <ul class="space-y-2">
 
-            @foreach ($menuItems as $item)
+    @foreach ($menuItems as $item)
 
-                <!-- Single Link -->
-                @if (!isset($item['children']))
-                    <li>
-                        <a href="{{ route($item['route']) }}"
-                           class="block p-2 rounded hover:bg-gray-300 text-white flex items-center">
-                            {!! $item['icon'] ?? '' !!}
-                            {{ $item['title'] }}
-                        </a>
-                    </li>
-                @endif
+        @if (!isset($item['children']))
 
-                <!-- Dropdown -->
-                @if (isset($item['children']))
-                    <li>
-                        <button wire:click="toggleMenu('{{ $item['key'] }}')"
-                                class="w-full text-left p-2 hover:bg-gray-300 rounded flex justify-between items-center text-white">
-                            <span class="flex items-center">
-                                {!! $item['icon'] ?? '' !!}
-                                {{ $item['title'] }}
-                            </span>
-                            <span>
-                                {{ $this->isExpanded($item['key']) ? '-' : '+' }}
-                            </span>
-                        </button>
+            @if(isset($item['action']) && $item['action'] === 'logout')
 
-                        <ul class="ml-4 overflow-hidden transition-all duration-300"
-                            style="max-height: {{ $this->isExpanded($item['key']) ? '500px' : '0px' }}">
+                <li>
+                    <button
+                        wire:click="logout"
+                        class="w-full p-2 rounded hover:bg-gray-300 text-white flex items-center"
+                    >
+                        {!! $item['icon'] ?? '' !!}
+                        {{ $item['title'] }}
+                    </button>
+                </li>
 
-                            @foreach ($item['children'] as $child)
-                                <li>
-                                    <a href="{{ $child['route'] ?? '#' }}"
-                                    class="flex items-center p-2 rounded text-white hover:bg-gray-700 hover:text-yellow-300">
-                                        {!! $child['icon'] ?? '' !!}
-                                        {{ $child['title'] }}
-                                    </a>
-                                </li>
-                            @endforeach
+            @else
 
-                        </ul>
-                    </li>
-                @endif
+                @php
+                    $itemHref = Route::has($item['route'])
+                        ? route($item['route'])
+                        : url($item['route']);
+                @endphp
 
-            @endforeach
+                <li>
+                    <a href="{{ $itemHref }}"
+                       class="block p-2 rounded hover:bg-gray-300 text-white flex items-center">
+                        {!! $item['icon'] ?? '' !!}
+                        {{ $item['title'] }}
+                    </a>
+                </li>
 
-        </ul>
+            @endif
+
+        @endif
+
+        @if (isset($item['children']))
+
+            <li>
+
+                <button
+                    wire:click="toggleMenu('{{ $item['key'] }}')"
+                    class="w-full text-left p-2 hover:bg-gray-300 rounded flex justify-between items-center text-white">
+
+                    <span class="flex items-center">
+                        {!! $item['icon'] ?? '' !!}
+                        {{ $item['title'] }}
+                    </span>
+
+                    <span>
+                        {{ $this->isExpanded($item['key']) ? '-' : '+' }}
+                    </span>
+
+                </button>
+
+                <ul class="ml-4 overflow-hidden transition-all duration-300"
+                    style="max-height: {{ $this->isExpanded($item['key']) ? '500px' : '0px' }}">
+
+                    @foreach ($item['children'] as $child)
+
+                        @php
+                            $childRoute = $child['route'] ?? '#';
+
+                            $childHref = $childRoute === '#'
+                                ? '#'
+                                : (Route::has($childRoute)
+                                    ? route($childRoute)
+                                    : url($childRoute));
+                        @endphp
+
+                        <li>
+                            <a href="{{ $childHref }}"
+                               class="flex items-center p-2 rounded text-white hover:bg-gray-700 hover:text-yellow-300">
+                                {!! $child['icon'] ?? '' !!}
+                                {{ $child['title'] }}
+                            </a>
+                        </li>
+
+                    @endforeach
+
+                </ul>
+
+            </li>
+
+        @endif
+
+    @endforeach
+
+</ul>     
         </div>
+  
     </aside>
 
     <!-- Mobile Overlay -->

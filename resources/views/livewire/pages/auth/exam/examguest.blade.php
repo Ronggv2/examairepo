@@ -1,9 +1,9 @@
  <!-- Form starts -->
                     <form wire:submit.prevent="joinExam">
-                        <!-- Exam Code -->
-                        <x-label for="exam_code">Enter Guest Name</x-label>
-                        <x-input type="text" wire:model.defer="exam_code" placeholder="Enter Guest Name"/>
-                        <x-input-error field="exam_name" />
+                        <!-- Guest Name -->
+                        <x-label for="guest_name">Enter Guest Name</x-label>
+                        <x-input type="text" wire:model.defer="guest_name" placeholder="Enter Guest Name"/>
+                        <x-input-error field="guest_name" />
 
                         <!-- Join error -->
                         @if($joinError)

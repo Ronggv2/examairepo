@@ -3,6 +3,7 @@
 namespace App\Livewire\Layout;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Sidebar extends Component
 {
@@ -18,7 +19,7 @@ class Sidebar extends Component
         'closeSidebar' => 'closeSidebar',
     ];
 
-    // ✅ Menu items with route & icon
+    // ✅Menu items with route & icon
     public $menuItems = [
         [
             'title' => 'Dashboard',
@@ -28,80 +29,24 @@ class Sidebar extends Component
         [
             'title' => 'Access Control',
             'key' => 'accessMenu',
-            'icon' => 'svg/user-management.svg',
+            'icon' => 'assets/svg/user.svg',
             'children' => [
                 [
                     'title' => 'Users Accounts',
                     'route' => 'users',
-                    'icon' => 'svg/user.svg',
-                ],
-                [
-                    'title' => 'Activity Logs',
-                    'route' => 'activitylogs',
-                    'icon' => 'svg/audit.svg',
+                    'icon' => 'assets/svg/account.svg',
                 ],
             ]
         ],
-        [
-            'title' => 'Members',
-            'key' => 'membersMenu',
-            'icon' => 'svg/academic.svg',
-            'children' => [
-                [
-                    'title' => 'Students Records',
-                    'route' => 'students',
-                    'icon' => 'svg/student.svg',
-                ],
-                [
-                    'title' => 'Teachers Records',
-                    'route' => 'teachers',
-                    'icon' => 'svg/teacher.svg',
-                ],
-            ]
+       [
+            'title' => 'AI Logs',
+            'route' => 'ailog',
+            'icon' => 'assets/svg/ai.svg',
         ],
-        [
-            'title' => 'Academics',
-            'key' => 'academicMenu',
-            'icon' => 'svg/classroom.svg',
-            'children' => [
-                [
-                    'title' => 'Classrooms',
-                    'route' => 'classrooms',
-                    'icon' => 'svg/classroom.svg',
-                ],
-                [
-                    'title' => 'Classes',
-                    'route' => 'classes',
-                    'icon' => 'svg/class.svg',
-                ],
-                                [
-                    'title' => 'Schedules',
-                    'route' => 'schedules',
-                    'icon' => 'svg/schedule.svg',
-                ],
-            ]
-        ],
-         [
-            'title' => 'Academic Settings',
-            'key' => 'academicSettingsMenu',
-            'icon' => 'svg/year.svg',
-            'children' => [
-                [
-                    'title' => 'AcademicYears',
-                    'route' => 'academicyears',
-                    'icon' => 'svg/year.svg',
-                ],
-                [
-                    'title' => 'Subjects',
-                    'route' => 'subjects',
-                    'icon' => 'svg/subject.svg',
-                ],
-                [
-                    'title' => 'Terms',
-                    'route' => 'terms',
-                    'icon' => 'svg/term.svg',
-                ],
-            ]
+               [
+            'title' => 'Logout',
+            'action' => 'logout',
+            'icon' => 'assets/svg/logout.svg',
         ],
         
     ];
@@ -133,6 +78,15 @@ class Sidebar extends Component
                 $this->loadSvgIcons($item['children']);
             }
         }
+    }
+    public function logout()
+    {
+        Auth::logout();
+
+        session()->invalidate();
+        session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 
     // Toggle dropdown menu

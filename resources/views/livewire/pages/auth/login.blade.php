@@ -31,10 +31,10 @@
 
                     <!-- Form starts -->
                     <form wire:submit.prevent="login">
-                        <!-- Username -->
-                        <x-label for="username">Username</x-label>
-                        <x-input type="text" wire:model.defer="username" placeholder="Username"/>
-                        <x-input-error field="username" />
+                        <!-- Email -->
+                        <x-label for="email">Email</x-label>
+                        <x-input type="email" wire:model.defer="email" placeholder="Email"/>
+                        <x-input-error field="email" />
 
                         <!-- Password -->
 

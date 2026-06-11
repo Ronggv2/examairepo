@@ -2,22 +2,35 @@
 
 namespace App\Models;
 
+use App\Models\ExamSetting;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class QuestionSet extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'user_id',
         'title',
         'description',
-        'subject',
+        'subjects',
         'difficulty',
+        'status',
+        'is_ai_generated',
         'total_questions',
-        'status'
     ];
+
+    protected $casts = [
+        'subjects' => 'array',
+        'is_ai_generated' => 'boolean',
+    ];
+
+    public function getSubjectsString()
+    {
+        if (is_array($this->subjects)) {
+            return implode(', ', $this->subjects);
+        }
+
+        return $this->subjects ? (string) $this->subjects : '';
+    }
 
     public function user()
     {
@@ -27,5 +40,20 @@ class QuestionSet extends Model
     public function questions()
     {
         return $this->hasMany(Question::class);
+    }
+
+    public function exams()
+    {
+        return $this->hasMany(Exam::class);
+    }
+
+    public function subjectPrompts()
+    {
+        return $this->hasMany(SubjectPrompt::class);
+    }
+
+    public function examSetting()
+    {
+        return $this->hasOne(ExamSetting::class);
     }
 }

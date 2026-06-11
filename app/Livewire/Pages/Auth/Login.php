@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class Login extends Component
 {
-    public $username = '';
+    public $email = '';
     public $password = '';
     public $loginError = '';
     public function index()
@@ -19,12 +19,12 @@ class Login extends Component
 public function login()
 {
     $this->validate([
-        'username' => 'required',
+        'email' => 'required|email',
         'password' => 'required',
     ]);
 
     $credentials = [
-        'username' => $this->username,
+        'email' => $this->email,
         'password' => $this->password,
     ];
 
@@ -58,7 +58,7 @@ public function login()
         return redirect('/');
     }
 
-    $this->loginError = 'Invalid username or password.';
+    $this->loginError = 'Invalid email or password.';
 }
 
     public function render()

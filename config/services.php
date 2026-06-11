@@ -35,4 +35,27 @@ return [
         ],
     ],
 
+    'providers' => [
+        'anthropic' => [
+            'key' => env('ANTHROPIC_API_KEY'),
+            'model' => env('ANTHROPIC_MODEL', 'claude-2'),
+            'base_url' => env('ANTHROPIC_BASE', 'https://api.anthropic.com/v1'),
+        ],
+        'azure_openai' => [
+            'key' => env('AZURE_OPENAI_API_KEY'),
+            'endpoint' => env('AZURE_OPENAI_ENDPOINT'),
+            'deployment' => env('AZURE_OPENAI_DEPLOYMENT', 'gpt-35-turbo'),
+        ],
+        'cohere' => [
+            'key' => env('COHERE_API_KEY'),
+            'model' => env('COHERE_MODEL', 'command-xlarge-nightly'),
+            'base_url' => env('COHERE_BASE', 'https://api.cohere.com/v1'),
+        ],
+        'deepseek' => [
+            'key' => env('DEEPSEEK_API_KEY'),
+            'model' => env('DEEPSEEK_MODEL', 'deepseek-chat'),
+            'base_url' => env('DEEPSEEK_BASE', 'https://api.deepseek.com/v1'),
+        ],
+    ],
+
 ];

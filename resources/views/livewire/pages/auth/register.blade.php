@@ -16,7 +16,7 @@
                     <!-- Form starts -->
                     <form wire:submit.prevent="register">
                         <!-- Username -->
-                        <x-label for="username">Username</x-label>,
+                        <x-label for="username">Username</x-label>
                         <x-input type="text" wire:model.defer="username" placeholder="Username"/>
                         <x-input-error field="username" />
 

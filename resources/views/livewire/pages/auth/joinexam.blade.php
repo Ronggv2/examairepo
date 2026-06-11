@@ -29,12 +29,15 @@
             <div class="w-full flex-1 mt-6">
                 <div class="mx-auto max-w-xs w-full">
 
-                    @if(isset($exam_code) && $exam_code == null)
+                    @if($joinError)
+                        <p class="text-red-500 text-sm mt-3 text-center">{{ $joinError }}</p>
+                    @endif
+
+                    @if(!$exam_code)
                         <livewire:pages.auth.exam.examcode />
                     @else
-                        <livewire:pages.auth.exam.examguest />
+                        <livewire:pages.auth.exam.examguest :exam_code="$exam_code" />
                     @endif
-                    
 
                 </div>
             </div>
