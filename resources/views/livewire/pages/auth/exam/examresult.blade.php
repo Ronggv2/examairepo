@@ -47,7 +47,7 @@
 
                     <div>
                         <p class="font-semibold">Time Used:</p>
-                        <p class="text-3xl">{{ $timeUsed }}</p>
+                        <p class="text-3xl">Disabled</p>
                     </div>
                 </div>
 
@@ -65,7 +65,7 @@
 
                     <div>
                         <p class="font-semibold">Time Left:</p>
-                        <p class="text-3xl">{{ $timeLeft }}</p>
+                        <p class="text-3xl">Disabled</p>
                     </div>
                 </div>
 
@@ -83,7 +83,7 @@
 
                     <div>
                         <p class="font-semibold">Exam Time:</p>
-                        <p class="text-3xl">{{ $examTime }}</p>
+                        <p class="text-3xl">Disabled</p>
                     </div>
                 </div>
 
@@ -110,15 +110,15 @@
                         </div>
                         <div class="flex justify-between gap-4">
                             <span class="font-medium">Time Used</span>
-                            <span>{{ $timeUsed }}</span>
+                            <span>Disabled</span>
                         </div>
                         <div class="flex justify-between gap-4">
                             <span class="font-medium">Time Left</span>
-                            <span>{{ $timeLeft }}</span>
+                            <span>Disabled</span>
                         </div>
                         <div class="flex justify-between gap-4">
                             <span class="font-medium">Exam Duration</span>
-                            <span>{{ $examTime }}</span>
+                            <span>Disabled</span>
                         </div>
                     </div>
                 </div>

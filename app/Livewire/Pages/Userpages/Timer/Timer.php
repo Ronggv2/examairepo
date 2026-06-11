@@ -4,6 +4,8 @@ namespace App\Livewire\Pages\Userpages\Timer;
 
 use App\Models\Exam;
 use App\Models\ExamSession;
+use App\Models\QuestionSet;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -160,13 +162,36 @@ class Timer extends Component
             return;
         }
 
+        // Ensure the question set is published and an Exam exists for it.
+        $questionSet = QuestionSet::find($this->questionSetId);
+        if ($questionSet && $questionSet->status !== 'published') {
+            $questionSet->update([
+                'status' => 'published',
+                'title' => trim($questionSet->title) ?: 'Untitled',
+            ]);
+        }
+
         $exam = Exam::where('question_set_id', $this->questionSetId)->first();
-        if (!$exam) {
+        if (! $exam && $questionSet) {
+            $exam = Exam::create([
+                'question_set_id' => (int) $this->questionSetId,
+                'title' => $questionSet->title ?? 'Untitled Exam',
+                'description' => $questionSet->description,
+                'duration' => $this->durationMinutes ?: 30,
+                'passing_score' => 50,
+                'shuffle_questions' => true,
+                'shuffle_options' => true,
+                'is_public' => true,
+            ]);
+        }
+
+        if (! $exam) {
             return;
         }
 
         $session = ExamSession::firstOrNew(['exam_id' => $exam->id]);
-        if (!$session->exists) {
+        // Always ensure a join code exists for the session when starting
+        if (!$session->exists || empty($session->join_code)) {
             $session->join_code = ExamSession::generateJoinCode();
         }
 
@@ -190,6 +215,16 @@ class Timer extends Component
         $this->joinLink = route('joinexam', ['code' => $session->join_code]);
         $this->status = 'running';
         $this->notifyTimerStatus();
+        // Broadcast published message for other components (e.g., header)
+        $publishMessage = 'Published exam successfully. Join code: ' . $session->join_code;
+        $this->publishedMessage = $publishMessage;
+        $this->dispatch('question-set-published', [
+            'questionSetId' => $this->questionSetId,
+            'examSessionId' => $session->id,
+            'joinCode' => $session->join_code,
+            'joinLink' => route('joinexam', ['code' => $session->join_code]),
+            'publishedMessage' => $publishMessage,
+        ]);
         $this->refreshTimer();
     }
 
@@ -258,8 +293,16 @@ class Timer extends Component
             'last_activity_at' => now(),
         ]);
         $session->refresh();
+        // Remove the join code so the old link no longer works
+        $session->update([
+            'join_code' => null,
+        ]);
+        $session->refresh();
         $session->cacheState();
 
+        // Clear UI join info
+        $this->joinCode = '';
+        $this->joinLink = '';
         $this->refreshTimer();
     }
 

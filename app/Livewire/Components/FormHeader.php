@@ -147,6 +147,42 @@ class FormHeader extends Component
         ]);
     }
 
+    public function unpublishQuestionSet(): void
+    {
+        $this->questionSetId = $this->questionSetId ?: request()->query('question_set');
+
+        if (!$this->questionSetId) {
+            return;
+        }
+
+        $questionSet = QuestionSet::where('id', $this->questionSetId)
+            ->where('user_id', Auth::id())
+            ->first();
+
+        if (!$questionSet) {
+            return;
+        }
+
+        // Set back to draft
+        $questionSet->update([
+            'status' => 'draft',
+        ]);
+
+        // Remove associated exam and sessions if present
+        $exam = Exam::where('question_set_id', (int) $this->questionSetId)->first();
+        if ($exam) {
+            ExamSession::where('exam_id', $exam->id)->delete();
+            $exam->delete();
+        }
+
+        $this->questionSet = $questionSet->refresh();
+        $this->publishSuccess = 'Unpublished exam successfully.';
+
+        $this->dispatch('question-set-unpublished', [
+            'questionSetId' => $this->questionSetId,
+        ]);
+    }
+
     public function render()
     {
         return view('livewire.components.form-header');

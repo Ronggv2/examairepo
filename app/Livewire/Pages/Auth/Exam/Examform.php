@@ -17,6 +17,8 @@ class Examform extends Component
     public $questions = [];
     public $selectedAnswers = [];
     public $remainingSeconds = 0;
+    public $endsAt = null;
+    public $serverNow = null;
     public $showError = false;
     public $errorMessage = '';
     public $examSetting;
@@ -48,6 +50,12 @@ class Examform extends Component
         $this->examSetting = $this->questionSet?->examSetting;
         $this->questions = $this->loadQuestionsForExam();
         $this->remainingSeconds = $this->computeRemainingSeconds();
+        $this->endsAt = optional($this->session->ends_at)->toISOString();
+        $this->serverNow = now()->toISOString();
+
+        if ($this->remainingSeconds <= 0 && !$this->session->is_submitted) {
+            return $this->submitExam(true);
+        }
     }
 
     public function tick()

@@ -1,4 +1,4 @@
-<div wire:poll.visible="tick" class="min-h-screen bg-slate-100 py-10">
+<div class="min-h-screen bg-slate-100 py-10">
     <div class="mx-auto max-w-6xl px-4">
         <div class="mb-6 flex flex-col gap-4 rounded-3xl bg-white p-6 shadow-md md:flex-row md:items-center md:justify-between">
             <div class="space-y-2">
@@ -15,8 +15,8 @@
                     <p class="font-semibold text-slate-900">{{ $questionSet?->user?->name ?? 'Unknown' }}</p>
                 </div>
                 <div>
-                    <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Time left</p>
-                    <p class="font-semibold text-indigo-600">{{ $this->formatTimer() }}</p>
+                    <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Timer</p>
+                    <p id="exam-timer" class="font-semibold text-indigo-600">Disabled</p>
                 </div>
             </div>
         </div>
@@ -88,9 +88,9 @@
                 <div class="rounded-3xl bg-white p-6 shadow-sm">
                     <h3 class="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Instructions</h3>
                     <ul class="space-y-3 text-sm text-slate-600">
-                        <li>Answer each question before time runs out.</li>
+                        <li>Answer each question at your own pace.</li>
                         <li>Your guest name is shown above.</li>
-                        <li>The exam will end automatically when the timer reaches zero.</li>
+                        <li>Timer: Disabled — no automatic submission will occur.</li>
                     </ul>
                 </div>
 
@@ -109,3 +109,5 @@
         </form>
     </div>
 </div>
+
+<!-- Timer script removed — client-side countdown and auto-submit disabled -->

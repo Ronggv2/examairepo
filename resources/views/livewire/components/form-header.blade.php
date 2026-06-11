@@ -22,20 +22,11 @@
 
                 <!-- RIGHT SIDE -->
                 <div class="flex items-center space-x-6">
-                        <button 
-                        wire:click="publishQuestionSet"
-                        @if($timerRunning) disabled @endif
-                        class="bg-blue-500 text-white px-4 py-2 rounded transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-600"
-                        type="button">
-                        Publish
-                    </button>
-
                     @if($timerRunning)
                         <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-sm font-medium text-amber-700">
                             Timer running
                         </span>
                     @endif
-
                     @if($publishSuccess)
                         <div class="ml-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-700">
                             {{ $publishSuccess }}
