@@ -57,7 +57,18 @@ class Examform extends Component
             return;
         }
 
-        $this->session->refresh();
+        $cachedState = ExamSession::getCachedState($this->session->id);
+        if ($cachedState) {
+            $this->session->fill([
+                'remaining_seconds' => $cachedState['remaining_seconds'],
+                'is_paused' => $cachedState['is_paused'],
+                'is_submitted' => $cachedState['is_submitted'],
+                'ends_at' => $cachedState['ends_at'],
+            ]);
+        } else {
+            $this->session->refresh();
+        }
+
         $this->remainingSeconds = $this->computeRemainingSeconds();
 
         if ($this->remainingSeconds <= 0 && !$this->session->is_submitted) {
@@ -147,6 +158,8 @@ class Examform extends Component
                     'is_paused' => false,
                     'ends_at' => now(),
                 ]);
+                $this->session->refresh();
+                $this->session->cacheState();
             }
         });
 

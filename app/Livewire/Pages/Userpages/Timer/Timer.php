@@ -60,7 +60,7 @@ class Timer extends Component
             $session = ExamSession::where('exam_id', $exam->id)->latest('created_at')->first();
             $this->examSessionId = $session->id ?? null;
         } else {
-            $session = ExamSession::find($this->examSessionId);
+            $session = ExamSession::fromCachedState($this->examSessionId) ?? ExamSession::find($this->examSessionId);
         }
 
         if (!$session) {
@@ -101,7 +101,7 @@ class Timer extends Component
             return;
         }
 
-        $session = ExamSession::find($this->examSessionId);
+        $session = ExamSession::fromCachedState($this->examSessionId) ?? ExamSession::find($this->examSessionId);
         if (!$session) {
             $this->status = 'no-session';
             $this->notifyTimerStatus();
@@ -123,8 +123,8 @@ class Timer extends Component
         }
 
         if ($session->ends_at) {
-            $seconds = now()->diffInSeconds($session->ends_at, false);
-            if ($seconds <= 0) {
+            $seconds = max(0, (int) floor(now()->diffInSeconds($session->ends_at, false)));
+            if ($seconds === 0) {
                 $session->update([
                     'remaining_seconds' => 0,
                     'is_submitted' => true,
@@ -132,18 +132,13 @@ class Timer extends Component
                     'ends_at' => now(),
                     'last_activity_at' => now(),
                 ]);
+                $session->cacheState();
                 $this->status = 'ended';
                 $this->remainingSeconds = 0;
                 $this->notifyTimerStatus();
                 return;
             }
 
-            $session->update([
-                'remaining_seconds' => $seconds,
-                'last_activity_at' => now(),
-            ]);
-
-            $this->remainingSeconds = $seconds;
             $this->remainingSeconds = $seconds;
             $this->status = 'running';
             $this->notifyTimerStatus();
@@ -188,6 +183,7 @@ class Timer extends Component
             'ends_at' => now()->addMinutes($duration),
         ]);
         $session->save();
+        $session->cacheState();
 
         $this->examSessionId = $session->id;
         $this->joinCode = $session->join_code;
@@ -208,13 +204,15 @@ class Timer extends Component
             return;
         }
 
-        $remaining = max(0, now()->diffInSeconds($session->ends_at, false));
+        $remaining = max(0, (int) floor(now()->diffInSeconds($session->ends_at, false)));
         $session->update([
             'remaining_seconds' => $remaining,
             'is_paused' => true,
             'ends_at' => null,
             'last_activity_at' => now(),
         ]);
+        $session->refresh();
+        $session->cacheState();
 
         $this->refreshTimer();
     }
@@ -235,6 +233,8 @@ class Timer extends Component
             'ends_at' => now()->addSeconds((int) ($session->remaining_seconds ?? ($session->duration_minutes * 60))),
             'last_activity_at' => now(),
         ]);
+        $session->refresh();
+        $session->cacheState();
 
         $this->refreshTimer();
     }
@@ -257,6 +257,8 @@ class Timer extends Component
             'ends_at' => now(),
             'last_activity_at' => now(),
         ]);
+        $session->refresh();
+        $session->cacheState();
 
         $this->refreshTimer();
     }
@@ -285,6 +287,8 @@ class Timer extends Component
                     'ends_at' => $session->is_paused ? null : now()->addMinutes($duration),
                     'last_activity_at' => now(),
                 ]);
+                $session->refresh();
+                $session->cacheState();
             }
         }
 
