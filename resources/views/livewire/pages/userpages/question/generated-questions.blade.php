@@ -6,7 +6,7 @@
                 <h3 class="text-sm font-semibold text-slate-900">Question Set Management</h3>
                 <p class="text-xs text-slate-500 mt-1">{{ count($questions) }} questions • Subjects: {{ implode(', ', $subjects ?? ['General']) }}</p>
             </div>
-            <button wire:click="regenerate" :disabled="$wire.isLoading" class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 disabled:bg-slate-200 disabled:text-slate-500">
+            <!-- <button wire:click="regenerate" :disabled="$wire.isLoading" class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 disabled:bg-slate-200 disabled:text-slate-500">
                 @if($isLoading)
                     <svg class="h-3 w-3 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -14,7 +14,7 @@
                     </svg>
                 @endif
                 {{ $isLoading ? 'Generating...' : 'Regenerate' }}
-            </button>
+            </button> -->
         </div>
 
         <!-- Subject Management Row -->
